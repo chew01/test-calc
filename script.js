@@ -37,6 +37,8 @@ const functionButtonContainer = document.querySelector(".functions");
 const functionButtons = functionButtonContainer.querySelectorAll("button");
 const equalButton = document.querySelector("#equals");
 const clearButton = document.querySelector("#clear");
+const backButton = document.querySelector("#back");
+const allButtons = document.querySelectorAll("button");
 
 let displayValue = "";
 let savedValue = "";
@@ -46,11 +48,15 @@ function changeDisplay() {
     if (savedValue !== "" && operator === "") {
         return;
     }
-    
-    if (displayValue.includes(".") && this.textContent === ".") {
+
+    if (Number(displayValue) === 0 && this.textContent === "0") {
+        return;
+    }
+    if (String(displayValue).includes(".") && this.textContent === ".") {
         return;
     }
   displayValue += this.textContent;
+//  displayValue = Number(displayValue);
   recalibrate();
 }
 
@@ -113,6 +119,21 @@ function recalibrate() {
   display.textContent = `${savedValue} ${operator} ${displayValue}`;
 }
 
+function backspace() {
+    if (savedValue === "" && operator === "" && displayValue !== "") {
+        displayValue = Math.floor(displayValue / 10);
+        recalibrate();
+    }
+    if (savedValue !== "" && operator !== "" && displayValue === "") {
+        operator = "";
+        recalibrate();
+    }
+    if (savedValue !== "" && operator !== "" && displayValue !== "") {
+        displayValue = Math.floor(displayValue / 10);
+        recalibrate();
+    }
+}
+
 digitButtons.forEach((button) =>
   button.addEventListener("click", changeDisplay)
 );
@@ -121,3 +142,17 @@ functionButtons.forEach((button) =>
 );
 equalButton.addEventListener("click", forceOperate);
 clearButton.addEventListener("click", clear);
+backButton.addEventListener("click", backspace);
+
+function hoverIn() {
+    this.classList.add("hover");
+}
+
+function hoverOut() {
+    this.classList.remove("hover");
+}
+
+allButtons.forEach((button) => {
+    button.addEventListener("mouseenter", hoverIn);
+    button.addEventListener("mouseleave", hoverOut);
+})
